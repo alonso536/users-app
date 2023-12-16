@@ -1,6 +1,7 @@
 package org.alonso.blogapp.security.filters;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,8 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
         Map<String, Object> httpResponse = new HashMap<>();
-        httpResponse.put("message", "Datos incorrectos");
-        httpResponse.put("error", failed.getMessage());
+        httpResponse.put("errors", Arrays.asList("Datos incorrectos", failed.getMessage()));
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.setStatus(401);
