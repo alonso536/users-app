@@ -28,6 +28,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
         List<UserEntity> users = (List<UserEntity>) userRepository.getAll();
 
@@ -54,6 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> findAll(Pageable page) {
         return userRepository.getAll(page)
                 .stream()
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO save(CreateUserDTO createUserDTO) {
         List<Role> roles = filterRoles(createUserDTO.getRoles(), roleRepository);
         Region region = regionRepository.findById(createUserDTO.getRegion())
@@ -91,6 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDTO findOne(String term) {
         Optional<UserEntity> optionalUser = userRepository.getById(term);
         if (!optionalUser.isPresent()) {
@@ -104,6 +109,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO update(UpdateUserDTO updateUserDTO, String id) {
         UserEntity user = userRepository.getById(id)
                 .orElseThrow(() -> new UserNotFoundException("No existe un usuario con el id " + id));
@@ -124,6 +130,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO, String id) {
         UserEntity user = userRepository.getById(id)
                 .orElseThrow(() -> new UserNotFoundException("No existe un usuario con el id " + id));
@@ -137,6 +144,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO delete(String id) {
         UserEntity user = userRepository.getById(id)
                 .orElseThrow(() -> new UserNotFoundException("No existe un usuario con el id " + id));
