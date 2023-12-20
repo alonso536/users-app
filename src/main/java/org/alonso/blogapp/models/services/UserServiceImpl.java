@@ -109,6 +109,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public UserDTO findByUsername(String username) {
+        Optional<UserEntity> optionalUser = userRepository.getByUsername(username);
+        if (!optionalUser.isPresent()) {
+            return null;
+        }
+
+        return buildUser(optionalUser.orElseThrow());
+    }
+
+    @Override
     @Transactional
     public UserDTO update(UpdateUserDTO updateUserDTO, String id) {
         UserEntity user = userRepository.getById(id)
@@ -151,5 +162,10 @@ public class UserServiceImpl implements UserService {
 
         user.setActive(false);
         return buildUser(userRepository.save(user));
+    }
+
+    @Override
+    public List<Region> findRegions() {
+        return (List<Region>) regionRepository.findAll();
     }
 }

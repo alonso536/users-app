@@ -14,6 +14,8 @@
 
 ## Modelo relacional
 
+<image src="https://res.cloudinary.com/dufgu6awb/image/upload/v1703031961/g9gxfclqztswaw9yevmh.jpg" alt="Modelo relacional" width="640px">
+
 ## Rutas
 
 - Documentación: `/swagger-ui.html`

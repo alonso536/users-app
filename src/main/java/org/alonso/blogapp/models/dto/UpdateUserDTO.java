@@ -43,5 +43,4 @@ public class UpdateUserDTO {
     @NotNull
     @Positive
     private Long region;
-
 }

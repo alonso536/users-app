@@ -1,6 +1,7 @@
 package org.alonso.blogapp.security.filters;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,8 +54,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            Map<String, String> httpResponse = new HashMap<>();
-            httpResponse.put("error", "Token inválido");
+            Map<String, Object> httpResponse = new HashMap<>();
+            httpResponse.put("errors", Arrays.asList("Token inválido"));
 
             response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
             response.setStatus(401);

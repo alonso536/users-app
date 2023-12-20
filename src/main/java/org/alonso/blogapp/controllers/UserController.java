@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -110,6 +111,30 @@ public class UserController {
             response.put("errors", Map.of("id", "No existe un usuario con el término " + term));
 
             return ResponseEntity.status(404).body(response);
+        }
+
+        response.put("status", 200);
+        response.put("user", user);
+
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("/check-auth/{username}")
+    public ResponseEntity<?> checkAuth(HttpServletRequest request, @PathVariable String username) {
+        Map<String, Object> response = new HashMap<>();
+
+        UserDTO user = userService.findByUsername(username);
+        if (user == null) {
+            log.error("No existe un usuario con el username " + username);
+            response.put("status", 404);
+            response.put("errors", Map.of("id", "No existe un usuario con el username " + username));
+            return ResponseEntity.status(404).body(response);
+        }
+
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            response.put("token", token);
         }
 
         response.put("status", 200);
